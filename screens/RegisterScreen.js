@@ -1,43 +1,67 @@
 import React from "react";
-import { View, Text, StyleSheet, TextInput, TouchableOpacity , Image, StatusBar, LayoutAnimation} from "react-native";
+import { View, Text, StyleSheet, TextInput, TouchableOpacity ,Image , StatusBar} from "react-native";
+import {Ionicons} from '@expo/vector-icons'
 import * as firebase from "firebase";
-import { YellowBox } from 'react-native';
-YellowBox.ignoreWarnings(['Setting a timer']);
-export default class LoginScreen extends React.Component {
+
+export default class RegisterScreen extends React.Component {
     static navigationOptions = {
         headerShown:false 
     };
 
     state = {
+        name:"",
         email: "",
         password:"",
         errorMessage: null
     };
+    handleSignUp = () => {
 
-    handleLogin = () => {
-        const{email, password} = this.state
-
-        firebase.auth()
-        .signInWithEmailAndPassword(email,password)
-        .catch(error => this.setState({errorMessage: error.message}));
-
+        firebase
+        .auth().createUserWithEmailAndPassword(this.state.email, this.state.password)
+        .then(userCredentials => {
+            return userCredentials.user.updateProfile({
+                displayName: this.state.name
+            })
+        })
+        .catch(error => this.setState({errorMessage: eror.message}));
     }
     render() {
-        LayoutAnimation.easeInEaseOut();
         return (
             <View style={styles.container}>
                 <StatusBar barStyle="light-content"></StatusBar>
                 <Image source = {require("../assets/header.png")}
                  style ={{marginTop:-80,marginLeft:-50}}
                  ></Image>
-                 
-                <Text style={styles.greeting}>{'Hoşgeldin'}</Text>
+                 <TouchableOpacity style={styles.back} onPress={()=> this.props.navigation.goBack()}>
+                     <Ionicons name="arrow-back" size={32} color="#FFF"></Ionicons>
+                 </TouchableOpacity>
+                <View style={{position: "absolute",top:64, alignItems: "center",width:"100%"}} >
+                    <Text style={styles.greeting}>{'Merhaba \n Başlamak için hemen kayıt ol'}</Text>
+                    <TouchableOpacity style={styles.avatar}>
+                    <Ionicons name="ios-add" 
+                    size={40} 
+                    color="#FFF" 
+                    style={{marginTop: 6, marginLeft:2}}
+                    ></Ionicons>
+                    </TouchableOpacity>
+                </View>
+                
 
                 <View style={styles.errorMessage}>
                     {this.state.errorMessage && <Text style={styles.error}>{this.state.errorMessage}</Text>}
                 </View >
                 <View style={styles.form}>
-                    <View>
+                <View>
+                        <Text style={styles.inputTitle}>Adınız</Text>
+                        <TextInput 
+                        style={styles.input} 
+                        autoCapitalize="none"  
+                        onChangeText={name => this.setState({name})}
+                        value={this.state.name}
+                        ></TextInput>
+                    </View>
+
+                    <View style={{ marginTop: 32 }}>
                         <Text style={styles.inputTitle}>Email Adresi</Text>
                         <TextInput style={styles.input} autoCapitalize="none"  
                         onChangeText={email => this.setState({email})}
@@ -55,14 +79,14 @@ export default class LoginScreen extends React.Component {
                         ></TextInput>
                     </View>
                 </View>
-                <TouchableOpacity style={styles.button} onPress = {this.handleLogin}>
-                    <Text style={{color: "#FFF", fontWeight:"500"}}>Giriş</Text>
+                <TouchableOpacity style={styles.button} onPress = {this.handleSignUp}>
+                    <Text style={{color: "#FFF", fontWeight:"500"}}>Kayıt Ol</Text>
                 </TouchableOpacity>
 
                 <TouchableOpacity style={{ alignSelf: "center", marginTop: 32 }} 
-                onPress={() => this.props.navigation.navigate("Register")}>
+                onPress={() => this.props.navigation.navigate("Login")}>
                     <Text style={{ color: "#414959",fontSize: 13}}>
-                        SocialApp'e yeni misin ? <Text style={{ fontWeight: "500",color: "#E9446A"}}> Kayıt Ol </Text>
+                        SocialApp'e yeni misin ? <Text style={{ fontWeight: "500",color: "#E9446A"}}> Giriş</Text>
                     </Text>
                 </TouchableOpacity>
             </View>
@@ -77,11 +101,11 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     greeting: {
-        marginTop: 32,
+        marginTop: 16,
         fontSize: 18,
         fontWeight: "400",
-        textAlign: "center"
-
+        textAlign: "center",
+        color:"#FFF"
     },
     errorMessage: {
         height: 72,
@@ -120,5 +144,26 @@ const styles = StyleSheet.create({
         height: 32,
         alignItems:"center",
         justifyContent:"center"
+    },
+    back: {
+        position:"absolute",
+        top: 48,
+        left:32,
+        width: 32,
+        height: 32,
+        borderRadius: 16,
+        backgroundColor: "rgba(21,22,48,0.1)",
+        alignItems:"center",
+        justifyContent:"center"
+
+    },
+    avatar:{
+        width: 100,
+        height: 100,
+        borderRadius: 50,
+        backgroundColor: "#E1E2E6",
+        marginTop:48,
+        justifyContent:"center",
+        alignItems:"center"
     }
 });
