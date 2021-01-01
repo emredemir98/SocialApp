@@ -1,8 +1,7 @@
 import React from "react";
 import { View, Text, StyleSheet, TextInput, TouchableOpacity , Image, StatusBar, LayoutAnimation} from "react-native";
 import * as firebase from "firebase";
-import { YellowBox } from 'react-native';
-YellowBox.ignoreWarnings(['Setting a timer']);
+
 export default class LoginScreen extends React.Component {
     static navigationOptions = {
         headerShown:false 
@@ -16,7 +15,7 @@ export default class LoginScreen extends React.Component {
 
     handleLogin = () => {
         const{email, password} = this.state
-
+        
         firebase.auth()
         .signInWithEmailAndPassword(email,password)
         .catch(error => this.setState({errorMessage: error.message}));
