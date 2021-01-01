@@ -9,11 +9,16 @@ export default class RegisterScreen extends React.Component {
     };
 
     state = {
-        name:"",
-        email: "",
-        password:"",
+        user:{
+            name:"",
+            email: "",
+            password:"",
+            avatar: null
+        },
         errorMessage: null
     };
+
+    handlePickAvatar = async () => {};
     handleSignUp = () => {
 
         firebase
@@ -37,7 +42,8 @@ export default class RegisterScreen extends React.Component {
                  </TouchableOpacity>
                 <View style={{position: "absolute",top:64, alignItems: "center",width:"100%"}} >
                     <Text style={styles.greeting}>{'Merhaba \n Başlamak için hemen kayıt ol'}</Text>
-                    <TouchableOpacity style={styles.avatar}>
+                    <TouchableOpacity style={styles.avatarPlaceholder} onPress={this.handlePickAvatar}>
+                        <Image source={{uri:this.state.user.avatar}} style={styles.avatar}/>
                     <Ionicons name="ios-add" 
                     size={40} 
                     color="#FFF" 
@@ -157,13 +163,20 @@ const styles = StyleSheet.create({
         justifyContent:"center"
 
     },
+    avatarPlaceholder:{
+        width: 100, 
+        height:100,
+        backgroundColor:"#E1E2E6",
+        borderRadius: 50,
+        marginTop: 48,
+        justifyContent: "center",
+        alignItems:"center"
+    },
     avatar:{
+        position:"absolute",
         width: 100,
         height: 100,
         borderRadius: 50,
-        backgroundColor: "#E1E2E6",
-        marginTop:48,
-        justifyContent:"center",
-        alignItems:"center"
+      
     }
 });
