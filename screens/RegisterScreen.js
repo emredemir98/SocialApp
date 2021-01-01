@@ -1,7 +1,9 @@
 import React from "react";
 import { View, Text, StyleSheet, TextInput, TouchableOpacity ,Image , StatusBar} from "react-native";
 import {Ionicons} from '@expo/vector-icons'
-import * as firebase from "firebase";
+import Fire from '../Fire'
+import UserPermissions from '../utilities/UserPermissions'
+import * as ImagePicker from 'expo-image-picker'
 
 export default class RegisterScreen extends React.Component {
     static navigationOptions = {
@@ -18,18 +20,25 @@ export default class RegisterScreen extends React.Component {
         errorMessage: null
     };
 
-    handlePickAvatar = async () => {};
-    handleSignUp = () => {
+    handlePickAvatar = async () => {
+        UserPermissions.getCameraPermission()
 
-        firebase
-        .auth().createUserWithEmailAndPassword(this.state.email, this.state.password)
-        .then(userCredentials => {
-            return userCredentials.user.updateProfile({
-                displayName: this.state.name
-            })
-        })
-        .catch(error => this.setState({errorMessage: eror.message}));
-    }
+        let result = await ImagePicker.launchImageLibraryAsync({
+            mediaTypes: ImagePicker.MediaTypeOptions.Images,
+            allowsEditing: true,
+            aspect:[4,3]
+
+        });
+
+        if(!result.cancelled){
+            this.setState({user :{...this.state.user, avatar: result.uri}});
+        }
+
+    };
+    handleSignUp = () => {
+        Fire.shared.createUser(this.state.user);
+    };
+    
     render() {
         return (
             <View style={styles.container}>
@@ -62,16 +71,16 @@ export default class RegisterScreen extends React.Component {
                         <TextInput 
                         style={styles.input} 
                         autoCapitalize="none"  
-                        onChangeText={name => this.setState({name})}
-                        value={this.state.name}
+                        onChangeText={name => this.setState({user : {...this.state.user, name}})}
+                        value={this.state.user.name}
                         ></TextInput>
                     </View>
 
                     <View style={{ marginTop: 32 }}>
                         <Text style={styles.inputTitle}>Email Adresi</Text>
                         <TextInput style={styles.input} autoCapitalize="none"  
-                        onChangeText={email => this.setState({email})}
-                        value={this.state.email}
+                        onChangeText={email => this.setState({user : {...this.state.user, email}})}
+                        value={this.state.user.email}
                         ></TextInput>
                     </View>
 
@@ -80,8 +89,8 @@ export default class RegisterScreen extends React.Component {
                         <TextInput style={styles.input} 
                         secureTextEntry 
                         autoCapitalize="none"
-                        onChangeText={password => this.setState({password})}
-                        value={this.state.password}
+                        onChangeText={password => this.setState({user : {...this.state.user, password}})}
+                        value={this.state.user.password}
                         ></TextInput>
                     </View>
                 </View>
