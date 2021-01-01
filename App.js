@@ -98,9 +98,6 @@ const AuthStack = createStackNavigator(
   {
     Login: LoginScreen,
     Register: RegisterScreen
-  },
-  {
-    initialRouteName: "Register"
   }
 );
 
