@@ -1,8 +1,9 @@
 import React from "react";
-import { View, Text, StyleSheet, FlatList, Image } from "react-native";
+import { View, Text, StyleSheet, FlatList,Animated, Image } from "react-native";
 import { Ionicons } from '@expo/vector-icons'
 import moment from 'moment'
 import Fire from '../Fire'
+import GestureHandler, { PinchGestureHandler , State} from 'react-native-gesture-handler';
 
 posts = [
 ];
@@ -15,20 +16,34 @@ export default class HomeScreen extends React.Component {
             avatar:""
         }
     }
+  
+    scale = new Animated.Value(1);
+    onPinchEvent = Animated.event([
+        {nativeEvent: {scale: this.scale}}
+    ],{useNativeDriver: true})
+    
+    onPinchStateChange = (event) => {
+        if(event.nativeEvent.oldState === State.ACTIVE){
+            Animated.spring(this.scale, {
+                toValue: 1,
+                useNativeDriver: true,
+            }).start();
+        }
+    }
     componentDidMount() {
     
-        this.unsubscribe = Fire.shared.firestore.collection("posts").onSnapshot(docs => {
+        this.unsubscribe = Fire.shared.firestore.collection("posts").orderBy('timestamp','desc').onSnapshot(docs => {
              docs.forEach(doc => {
                 posts.push(doc.data())
             }); this.setState({ posts })
         })
-        this.subcribe = Fire.shared.firestore.collection("users").doc('Y81TeabgNoYOkw4VU189svin00o1').onSnapshot(doc =>
+       /*this.subcribe = Fire.shared.firestore.collection("users").doc('Y81TeabgNoYOkw4VU189svin00o1').onSnapshot(doc =>
           this.setState({
               user:{
                 avatar:doc.data().avatar
               }
           })  
-            )
+            )*/
     }
     componentWillUnMount() {
         this.unsubscribe();
@@ -46,7 +61,11 @@ export default class HomeScreen extends React.Component {
                         <Ionicons none="ios-more" size={24} color="#73788B" />
                     </View>
                     <Text style={styles.post}>{post.text}</Text>
-                    <Image source={{uri:post.image}} style={styles.postImage} resizeMode="cover" />
+                    <PinchGestureHandler onGestureEvent={this.onPinchEvent} onHandlerStateChange={this.onPinchStateChange}
+                    ><Animated.Image source={{uri:post.image}} style={[styles.postImage,{transform:[
+                        {scale: this.scale},
+                    ]}]} resizeMode="cover" />
+                    </PinchGestureHandler >
                     <View style={{ flexDirection: "row" }}>
                         <Ionicons name="heart-outline" size={24} color="#73788B" style={{ marginRight: 16 }} />
                         <Ionicons name="chatbox" size={24} color="#73788B" style={{ marginRight: 16 }} />

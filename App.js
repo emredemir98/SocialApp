@@ -13,9 +13,7 @@ import MessageScreen from './screens/MessageScreen'
 import PostScreen from './screens/PostScreen'
 import NotificationScreen from './screens/NotificationScreen'
 import ProfileScreen from './screens/ProfileScreen'
-import { LogBox } from 'react-native';
 
-LogBox.ignoreLogs(['Setting a timer']);
 import config from './config';
 
 console.log(config.name);

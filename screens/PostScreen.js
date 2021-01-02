@@ -22,12 +22,12 @@ export default class PostScreen extends React.Component {
     }
 
     handlePost = () => {
-        <ActivityIndicator size="large" color="#0000ff" />
+        this.props.navigation.goBack();
         Fire.shared
         .addPost({ text: this.state.text.trim(), localUri: this.state.image })
         .then(ref => {
             this.setState({ text: "", image: null });
-            this.props.navigation.goBack();
+           
         })
             .catch(error => {
                 alert(error);
