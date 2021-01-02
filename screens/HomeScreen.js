@@ -2,44 +2,41 @@ import React from "react";
 import { View, Text, StyleSheet, FlatList, Image } from "react-native";
 import { Ionicons } from '@expo/vector-icons'
 import moment from 'moment'
+import Fire from '../Fire'
 
 posts = [
-
-    {
-        id: "1",
-        name: "Sabri Bey",
-        text:
-            "Zebure kakasa anuveste ,azgara mananda kinamı kazanna dihanna , limanasta hirana karga nabana nanto neroni tayvo konto kinoso Enter Amano",
-        timestamp: 1609499748790,
-        avatar: require("../assets/avatar.png"),
-        image: require("../assets/header.png")
-    },
-    {
-        id: "2",
-        name: "Ayberk Bey",
-        text:
-            "Zebure kakasa anuveste ,azgara mananda kinamı kazanna dihanna , limanasta hirana karga nabana nanto neroni tayvo konto kinoso Enter Amano",
-        timestamp: 1609499748790,
-        avatar: require("../assets/avatar.png"),
-        image: require("../assets/header.png")
-    },
-    {
-        id: "3",
-        name: "Burak Bey",
-        text:
-            "Zebure kakasa anuveste ,azgara mananda kinamı kazanna dihanna , limanasta hirana karga nabana nanto neroni tayvo konto kinoso Enter Amano",
-        timestamp: 1609499748790,
-        avatar: require("../assets/avatar.png"),
-        image: require("../assets/header.png")
-    }
 ];
 
+unsubcribe = null
+subcribe = null
 export default class HomeScreen extends React.Component {
-
+    state = {
+        user: {
+            avatar:""
+        }
+    }
+    componentDidMount() {
+    
+        this.unsubscribe = Fire.shared.firestore.collection("posts").onSnapshot(docs => {
+             docs.forEach(doc => {
+                posts.push(doc.data())
+            }); this.setState({ posts })
+        })
+        this.subcribe = Fire.shared.firestore.collection("users").doc('Y81TeabgNoYOkw4VU189svin00o1').onSnapshot(doc =>
+          this.setState({
+              user:{
+                avatar:doc.data().avatar
+              }
+          })  
+            )
+    }
+    componentWillUnMount() {
+        this.unsubscribe();
+    }
     renderPost = post => {
         return (
             <View style={styles.feedItem}>
-                <Image source={post.avatar} style={styles.avatar} />
+                <Image source={{uri:this.state.user.avatar}} style={styles.avatar} />
                 <View style={{ flex: 1 }}>
                     <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center" }} >
                         <View>
@@ -49,7 +46,7 @@ export default class HomeScreen extends React.Component {
                         <Ionicons none="ios-more" size={24} color="#73788B" />
                     </View>
                     <Text style={styles.post}>{post.text}</Text>
-                    <Image source={post.image} style={styles.postImage} resizeMode="cover" />
+                    <Image source={{uri:post.image}} style={styles.postImage} resizeMode="cover" />
                     <View style={{ flexDirection: "row" }}>
                         <Ionicons name="heart-outline" size={24} color="#73788B" style={{ marginRight: 16 }} />
                         <Ionicons name="chatbox" size={24} color="#73788B" style={{ marginRight: 16 }} />

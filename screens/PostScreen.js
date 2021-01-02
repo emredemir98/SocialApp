@@ -16,7 +16,7 @@ export default class PostScreen extends React.Component {
         text: "",
         image: null
     };
-
+    
     componentDidMount() {
         UserPermissions.getCameraPermission()
     }
