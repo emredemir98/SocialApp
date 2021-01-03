@@ -1,9 +1,15 @@
-import firebaseKeys from "./config";
+import React from 'react'
 import firebase from "./config";
 
 
 class Fire {
 
+    state = {
+        user: {
+            avatar:""
+        }
+    }
+    
     addPost = async ({ text, localUri }) => {
         const remoteUri = await this.uploadPhotoAsync(localUri,`photos/${this.uid}/${Date.now()}`);
 
@@ -12,7 +18,7 @@ class Fire {
                 text,
                 uid: this.uid,
                 timestamp: this.timestamp,
-                image: remoteUri
+                image: remoteUri,
             })
                 .then(ref => {
                     res(ref)

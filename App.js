@@ -15,6 +15,9 @@ import NotificationScreen from './screens/NotificationScreen'
 import ProfileScreen from './screens/ProfileScreen'
 
 import config from './config';
+import { LogBox } from 'react-native';
+LogBox.ignoreLogs(['Warning: ...']); // Ignore log notification by message
+LogBox.ignoreAllLogs();//Ignore all log notifications
 
 console.log(config.name);
 console.log(config.database());
@@ -29,12 +32,7 @@ const AppContainer = createStackNavigator(
           navigationOptions: {
             tabBarIcon: ({ tintColor }) => <Ionicons name="ios-home" size={24} color={tintColor} />
           }
-        },
-        Message: {
-          screen: MessageScreen,
-          navigationOptions: {
-            tabBarIcon: ({ tintColor }) => <Ionicons name="ios-chatboxes" size={24} color={tintColor} />
-          }
+
         },
         Post: {
           screen: PostScreen,
@@ -46,12 +44,6 @@ const AppContainer = createStackNavigator(
                 color="#E9446A"
                 style={{ shadowColor: "#E9446A", shadowOffset: { width: 0, height: 0, shadowRadius: 10, shadowOpacity: 0.3 } }} />
             )
-          }
-        },
-        Notification: {
-          screen: NotificationScreen,
-          navigationOptions: {
-            tabBarIcon: ({ tintColor }) => <Ionicons name="ios-notifications" size={24} color={tintColor} />
           }
         },
         Profile: {

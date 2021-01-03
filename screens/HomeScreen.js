@@ -37,21 +37,15 @@ export default class HomeScreen extends React.Component {
                 posts.push(doc.data())
             }); this.setState({ posts })
         })
-       /*this.subcribe = Fire.shared.firestore.collection("users").doc('Y81TeabgNoYOkw4VU189svin00o1').onSnapshot(doc =>
-          this.setState({
-              user:{
-                avatar:doc.data().avatar
-              }
-          })  
-            )*/
+       
     }
     componentWillUnMount() {
-        this.unsubscribe();
+        //this.unsubscribe();
     }
     renderPost = post => {
         return (
             <View style={styles.feedItem}>
-                <Image source={{uri:this.state.user.avatar}} style={styles.avatar} />
+                <Image source={{uri:post.avatar}} style={styles.avatar} />
                 <View style={{ flex: 1 }}>
                     <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center" }} >
                         <View>
@@ -147,6 +141,7 @@ const styles = StyleSheet.create({
 
     },
     postImage: {
+        
         width: undefined,
         height: 150,
         borderRadius: 5,
