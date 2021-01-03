@@ -14,17 +14,27 @@ export default class PostScreen extends React.Component {
     
     state = {
         text: "",
-        image: null
+        image: null,
+        user:{
+            avatar: null,
+        }
     };
     
     componentDidMount() {
         UserPermissions.getCameraPermission()
-    }
+        const user = this.props.uid || Fire.shared.uid
 
+        this.unsubscribe = Fire.shared.firestore.collection("users").doc(user).onSnapshot(doc => {
+            this.setState({ user: doc.data() })
+        })
+    }
+    componentWillUnMount() {
+        this.unsubscribe();
+    }
     handlePost = () => {
         this.props.navigation.goBack();
         Fire.shared
-        .addPost({ text: this.state.text.trim(), localUri: this.state.image})
+        .addPost({ text: this.state.text.trim(), localUri: this.state.image ,avatar: this.state.user.avatar})
         .then(ref => {
             this.setState({ text: "", image: null });
            
@@ -57,7 +67,7 @@ export default class PostScreen extends React.Component {
                     </TouchableOpacity>
                 </View>
                 <View style={styles.inputContainer}>
-                    <Image source={require("../assets/avatar.png")} style={styles.avatar}></Image>
+                    <Image style={styles.avatar} source={this.state.user.avatar ? { uri: this.state.user.avatar } : require('../assets/avatar.png')} style={styles.avatar}></Image>
                     <TextInput
                         autoFocus={false}
                         multiline={true}

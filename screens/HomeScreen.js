@@ -40,12 +40,12 @@ export default class HomeScreen extends React.Component {
        
     }
     componentWillUnMount() {
-        //this.unsubscribe();
+        this.unsubscribe();
     }
     renderPost = post => {
         return (
             <View style={styles.feedItem}>
-                <Image source={{uri:post.avatar}} style={styles.avatar} />
+                <Image source={{uri:this.state.user.avatar}} style={styles.avatar} />
                 <View style={{ flex: 1 }}>
                     <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center" }} >
                         <View>

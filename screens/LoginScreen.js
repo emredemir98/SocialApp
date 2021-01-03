@@ -61,7 +61,7 @@ export default class LoginScreen extends React.Component {
                 <TouchableOpacity style={{ alignSelf: "center", marginTop: 32 }} 
                 onPress={() => this.props.navigation.navigate("Register")}>
                     <Text style={{ color: "#414959",fontSize: 13}}>
-                        SocialApp'e yeni misin ? <Text style={{ fontWeight: "500",color: "#E9446A"}}> Kayıt Ol </Text>
+                        SosyalMedya'e yeni misin ? <Text style={{ fontWeight: "500",color: "#E9446A"}}> Kayıt Ol </Text>
                     </Text>
                 </TouchableOpacity>
             </View>

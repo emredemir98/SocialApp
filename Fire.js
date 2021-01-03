@@ -1,4 +1,5 @@
 import React from 'react'
+import { TouchableHighlightBase } from 'react-native';
 import firebase from "./config";
 
 
@@ -9,16 +10,16 @@ class Fire {
             avatar:""
         }
     }
-    
-    addPost = async ({ text, localUri }) => {
+    unsubscribe = null;
+    addPost = async ({ text, localUri ,avator}) => {
         const remoteUri = await this.uploadPhotoAsync(localUri,`photos/${this.uid}/${Date.now()}`);
-
         return new Promise((res, rej) => {
             this.firestore.collection("posts").add({
                 text,
                 uid: this.uid,
                 timestamp: this.timestamp,
                 image: remoteUri,
+                avatar: "1"
             })
                 .then(ref => {
                     res(ref)
