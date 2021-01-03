@@ -11,7 +11,7 @@ class Fire {
         }
     }
     unsubscribe = null;
-    addPost = async ({ text, localUri ,avator}) => {
+    addPost = async ({ text, localUri ,avatar}) => {
         const remoteUri = await this.uploadPhotoAsync(localUri,`photos/${this.uid}/${Date.now()}`);
         return new Promise((res, rej) => {
             this.firestore.collection("posts").add({
@@ -19,7 +19,6 @@ class Fire {
                 uid: this.uid,
                 timestamp: this.timestamp,
                 image: remoteUri,
-                avatar: "1"
             })
                 .then(ref => {
                     res(ref)
